@@ -4,7 +4,6 @@ import 'user.dart';
 
 class Repository {
   final String name;
-  final String fullName;
   final String htmlUrl;
   final String description;
   final User user;
@@ -12,7 +11,6 @@ class Repository {
   const Repository({
     @required this.user,
     @required this.name,
-    @required this.fullName,
     @required this.htmlUrl,
     @required this.description,
   });
@@ -21,9 +19,8 @@ class Repository {
     return Repository(
       user: User.fromJson(json["owner"]),
       name: json["name"],
-      fullName: json["full_name"],
       htmlUrl: json["html_url"],
-      description: json["description"],
+      description: json["description"] ?? '',
     );
   }
 }

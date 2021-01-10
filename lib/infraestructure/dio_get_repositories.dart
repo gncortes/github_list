@@ -8,8 +8,30 @@ class DioGetRepositories implements IGetRepositoriesFacade {
   final _dio = Dio();
   @override
   Future<Either<ApiError, List<Repository>>> getRepositories() async {
-    final response = await _dio.get('https://api.github.com/repositories');
-    print(response.data);
-    return Left(ApiError.serverError);
+    try {
+      final response = await _dio.get('https://api.github.com/repositories');
+      switch (response.statusCode) {
+        case 200:
+          List repositoriesJsonList = response.data;
+          List<Repository> listRepositories = repositoriesJsonList
+              .map((e) => Repository.fromJson(e))
+              .take(100)
+              .toList();
+          return Right(listRepositories);
+        case 404:
+          return Left(ApiError.notFound);
+        default:
+          return Left(ApiError.serverError);
+      }
+    } on DioError catch (e) {
+      if (DioErrorType.RECEIVE_TIMEOUT == e.type ||
+          DioErrorType.CONNECT_TIMEOUT == e.type) {
+        return Left(ApiError.withoutInternet);
+      } else {
+        return Left(ApiError.notFound);
+      }
+    } catch (e) {
+      return Left(ApiError.notFound);
+    }
   }
 }

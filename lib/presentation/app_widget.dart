@@ -10,10 +10,7 @@ class AppWidget extends StatelessWidget {
     return MaterialApp(
       title: 'Repositórios do Github',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: ThemeData.dark(),
       home: HomePage(
         controller: HomeController(
           DioGetRepositories(),

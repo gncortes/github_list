@@ -1,1 +1,1 @@
-enum ApiError { withoutInternet, serverError }
+enum ApiError { withoutInternet, serverError, notFound }

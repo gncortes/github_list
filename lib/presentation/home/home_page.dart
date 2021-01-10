@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:github_list/application/home_controller.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:github_list/presentation/home/components/repository_component.dart';
+
+import 'components/error_component.dart';
 
 class HomePage extends StatefulWidget {
   final HomeController controller;
@@ -17,29 +20,52 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black26,
       appBar: AppBar(
-        title: Text('Primeiros 100 repositórios do GitHub'),
+        backgroundColor: Colors.black26,
+        elevation: 0,
+        title: Text(
+          'Primeiros 100 repositórios criados no GitHub',
+          style: TextStyle(
+            fontSize: 12,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: Observer(
         builder: (_) {
           if (controller.isLoading) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Carregando lista de repositórios'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
-                ),
-              ],
+            return Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              ),
             );
-          } else
+          } else {
             return controller.githubList.value.unite(
-              (left) => Text('Deu erro'),
-              (right) => Text('Tudo ok'),
+              (left) => Center(
+                child: ErrorComponent(
+                  error: left,
+                  onPressed: controller.getGithubList,
+                ),
+              ),
+              (right) => ListView.builder(
+                itemCount: right.length,
+                itemBuilder: (_, index) {
+                  return Column(
+                    children: [
+                      RepositoryComponent(
+                        repository: right[index],
+                      ),
+                      Divider(
+                        thickness: 0.5,
+                        height: 0.5,
+                      ),
+                    ],
+                  );
+                },
+              ),
             );
+          }
         },
       ),
     );
