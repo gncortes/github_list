@@ -10,9 +10,7 @@ class HomeController = _HomeControllerBase with _$HomeController;
 abstract class _HomeControllerBase with Store {
   final IGetRepositoriesFacade _facade;
 
-  _HomeControllerBase(this._facade) {
-    getGithubList();
-  }
+  _HomeControllerBase(this._facade);
 
   @observable
   ObservableFuture<Either<ApiError, List<Repository>>> githubList;

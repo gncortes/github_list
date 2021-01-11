@@ -13,6 +13,7 @@ class DioGetRepositories implements IGetRepositoriesFacade {
       switch (response.statusCode) {
         case 200:
           List repositoriesJsonList = response.data;
+          if (repositoriesJsonList.isEmpty) return Left(ApiError.notFound);
           List<Repository> listRepositories = repositoriesJsonList
               .map((e) => Repository.fromJson(e))
               .take(100)
